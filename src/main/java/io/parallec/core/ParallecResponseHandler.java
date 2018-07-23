@@ -22,7 +22,7 @@ import java.util.Map;
 public interface ParallecResponseHandler {
 
     /**
-     * When timeout / error occurred or response received for the target host,
+     * When timeout / error occurred or response that received for the target host,
      * will trigger execution of onCompleted(). 
      * 
      * This can be run at the execution manager (default) or the worker thread 

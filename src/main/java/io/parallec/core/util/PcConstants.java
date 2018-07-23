@@ -18,6 +18,7 @@ package io.parallec.core.util;
  * @author Yuanteng (Jeff) Pei
  * 
  */
+/** 看来big company也是这样定义静态变量的 */
 public class PcConstants {
 
     public static final String API_PREFIX = "API_";

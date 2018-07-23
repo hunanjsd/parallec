@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 public class FilterRegex {
 
     /** The logger. */
+    /** 同道中人 */
     private static Logger logger = LoggerFactory.getLogger(FilterRegex.class);
 
     /** The regex. */
@@ -62,11 +63,14 @@ public class FilterRegex {
      *            the pattern str
      * @return the string
      */
+    /** 根据表达式替换掉换行符*/
     public static String stringMatcherByPattern(String input, String patternStr) {
 
+        /** 默认是匹配失败 */
         String output = PcConstants.SYSTEM_FAIL_MATCH_REGEX;
 
         // 20140105: fix the NPE issue
+        /** 作为参数传递的字符串都要进行非null检验,习惯要养成*/
         if (patternStr == null) {
             logger.error("patternStr is NULL! (Expected when the aggregation rule is not defined at "
                     + PcDateUtils.getNowDateTimeStrStandard());
@@ -78,6 +82,7 @@ public class FilterRegex {
                     + PcDateUtils.getNowDateTimeStrStandard());
             return output;
         } else {
+            /**过滤掉换行符号 */
             input = input.replace("\n", "").replace("\r", "");
         }
 

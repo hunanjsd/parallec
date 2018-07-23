@@ -23,6 +23,7 @@ import java.util.Map;
  *
  * @author Yuanteng (Jeff) Pei
  */
+/** 封装http请求头参数构造*/
 public class ParallecHeader {
 
     /** The header map. */
