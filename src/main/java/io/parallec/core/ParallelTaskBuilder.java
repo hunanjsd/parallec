@@ -224,14 +224,16 @@ public class ParallelTaskBuilder {
      *            the handler
      * @return the parallel task
      */
-
+    /** 参数handler是用于处理task请求返回结构的,一般都是自定义的*/
     public ParallelTask execute(ParallecResponseHandler handler) {
 
+        /** ParallelClient 生成ParallelBuilder,ParallelBuilder生成ParallelTask */
         ParallelTask task = new ParallelTask();
 
         try {
             targetHostMeta = new TargetHostMeta(targetHosts);
 
+            /** 为何要定义一个final,恕在下愚钝*/
             final ParallelTask taskReal = new ParallelTask(requestProtocol,
                     concurrency, httpMeta, targetHostMeta, sshMeta, tcpMeta, udpMeta, pingMeta,
                     handler, responseContext, 
@@ -245,15 +247,16 @@ public class ParallelTaskBuilder {
                     + task.getTaskId() + "***********");
 
             // throws ParallelTaskInvalidException
+            /** 验证任务是否有错,并填充默认值*/
             task.validateWithFillDefault();
 
             task.setSubmitTime(System.currentTimeMillis());
 
-            /** 查看是否有*/
+            /** 查看是否启用容量感知*/
             if (task.getConfig().isEnableCapacityAwareTaskScheduler()) {
 
                 //late initialize the task scheduler
-                /** 懒加载ParallelTaskManager单例,初始化ParallelTaskManager守护线程*/
+                /** 懒加载ParallelTaskManager单例,初始化ParallelTaskManager守护线程,其实这里每次新增Task都执行一次,挺多的,后期可改变这种实现*/
                 ParallelTaskManager.getInstance().initTaskSchedulerIfNot();
                 // add task to the wait queue
                 /** 将任务加载到等待队列中 */

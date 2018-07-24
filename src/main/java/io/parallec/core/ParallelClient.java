@@ -208,7 +208,7 @@ public class ParallelClient {
      * Prepare a parallel TCP Task.
      *
      * @param command
-     *            the command
+     *            the command:使用tcp要发送的命令
      * @return the parallel task builder
      */
     public ParallelTaskBuilder prepareTcp(String command) {

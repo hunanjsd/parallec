@@ -129,6 +129,7 @@ public class OperationWorker extends UntypedActor {
                 .getHost() : request.getHostUniform();
 
         // if needs poller; init
+        /** 初始化长连接配置*/
         if (request.isPollable()) {
             pollerData = new PollerData();
             this.httpPollerProcessor = httpPollerProcessor;
@@ -162,11 +163,15 @@ public class OperationWorker extends UntypedActor {
                     // use the same function
                     cancel();
                     break;
+                /** 又没有缺省值,让老夫来补全(强迫症) */
+                default:
+                    break;
                 }// end switch
             } else if (message instanceof ResponseOnSingeRequest) {
                 final ResponseOnSingeRequest myResponse = (ResponseOnSingeRequest) message;
                 handleHttpWorkerResponse(myResponse);
             } else {
+                /** 不需要处理unhandled的情况*/
                 unhandled(message);
                 throw new ActorMessageTypeInvalidException(
                         "invalid message type to OperationWorker");
@@ -363,6 +368,7 @@ public class OperationWorker extends UntypedActor {
                 logger.debug("url pass validation: " + urlComplete);
             }
 
+            /** 创建一个httpWork去执行http请求*/
             asyncWorker = getContext().actorOf(
                     Props.create(HttpWorker.class, actorMaxOperationTimeoutSec,
                             client, urlComplete, request.getHttpMethod(),

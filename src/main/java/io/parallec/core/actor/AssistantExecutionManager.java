@@ -38,6 +38,9 @@ import akka.actor.UntypedActor;
  * @author Yuanteng (Jeff) Pei
  * 
  */
+/**
+ * 批量发送请求的助理类(帮助ExecutionManager发送请求)
+ * */
 public class AssistantExecutionManager extends UntypedActor {
 
     /** The logger. */
@@ -98,6 +101,9 @@ public class AssistantExecutionManager extends UntypedActor {
                  * !!! This is a must; without this sleep; stuck occured at 5K.
                  * AKKA seems cannot handle too much too fast message send out.
                  */
+                /** 这一步是必须的,没有sleep,5k的数据量时会卡住
+                 *  akka好像不支持短时间呢快速发送大量数据
+                 * */
                 Thread.sleep(1L);
 
             } catch (InterruptedException e) {
@@ -153,6 +159,7 @@ public class AssistantExecutionManager extends UntypedActor {
             // clear responseMap
 
             RequestToBatchSenderAsstManager request = (RequestToBatchSenderAsstManager) message;
+            /** 获取上游的actor */
             originalManager = getSender();
             taskId = request.getTaskId();
             asstManagerRetryIntervalMillis = request

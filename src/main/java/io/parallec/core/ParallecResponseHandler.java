@@ -19,6 +19,7 @@ import java.util.Map;
  * The Interface ParallecResponseHandler.
  * 
  */
+/** 提供一个接口,用户继承该接口对task执行结果进行处理*/
 public interface ParallecResponseHandler {
 
     /**

@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  * @author Yuanteng (Jeff) Pei
  * 
  */
+/** 生成节点数据,确保他为非null*/
 public class InternalDataProvider {
 
     /** The logger. */
@@ -38,6 +39,7 @@ public class InternalDataProvider {
             .getLogger(InternalDataProvider.class);
 
     /** The Constant instance. */
+    /** 使用的是单例模式 */
     private static final InternalDataProvider instance = new InternalDataProvider();
 
     /**

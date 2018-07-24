@@ -371,6 +371,7 @@ public class HttpWorker extends UntypedActor {
      *            the response
      * @return the response on single request
      */
+    /** 发送httpclient获取的数据到父actor*/
     public ResponseOnSingeRequest onComplete(Response response) {
 
         cancelCancellable();
@@ -475,6 +476,7 @@ public class HttpWorker extends UntypedActor {
                 throws Exception {
 
             ResponseOnSingeRequest myResponse = null;
+            /** 这段代码写的有点绕,这里调用HttpWorker onComplete处理请求获取回来的信息 */
             httpWorker.onComplete(response);
             return myResponse;
         }

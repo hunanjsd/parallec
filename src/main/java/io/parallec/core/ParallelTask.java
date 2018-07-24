@@ -297,7 +297,7 @@ public class ParallelTask {
                 success = true;
                 break;
             case COMPLETED_WITHOUT_ERROR:
-                /** 作者没写,这个和下面的break都是我加的!虽然加不加都没啥用,但是强迫症忍不了,皮一下*/
+                /** 作者没写,这个和下面的break都是我加的!虽然加不加都没啥用,但是我的强迫症忍不了,皮一下*/
                 break;
             case COMPLETED_WITH_ERROR:
                 break;

@@ -78,11 +78,17 @@ import com.ning.http.client.AsyncHttpClient;
  * @author Yuanteng (Jeff) Pei
  * 
  */
+
+/**
+ * leilei了,它lei了.akka执行task任务的actor,为每一个host创建一个actor。一天的努力,就是为了看你
+ */
 public class ExecutionManager extends UntypedActor {
 
     /** The logger. */
     private static Logger logger = LoggerFactory
             .getLogger(ExecutionManager.class);
+
+    /** 下面的属性基本都设置了默认值*/
 
     /** The response count. */
     protected int responseCount = 0;
@@ -103,6 +109,7 @@ public class ExecutionManager extends UntypedActor {
     protected ActorRef director = null;
 
     /** The workers. */
+    /** 保存actor的map*/
     protected final Map<String, ActorRef> workers = new LinkedHashMap<String, ActorRef>();
 
     /** The batch sender asst manager. */
@@ -155,9 +162,11 @@ public class ExecutionManager extends UntypedActor {
         try {
             // Start all workers
             if (message instanceof InitialRequestToManager) {
+                /** 该actor的上级主管*/
                 director = getSender();
                 logger.info("parallec task state : "
                         + ParallelTaskState.IN_PROGRESS.toString());
+                /** 号外！号外！任务状态是在这个改变的!!后面再取消task的时候用到了任务状态state */
                 task.setState(ParallelTaskState.IN_PROGRESS);
                 task.setExecuteStartTime(startTime);
 
@@ -192,6 +201,7 @@ public class ExecutionManager extends UntypedActor {
 
                 Map<String, NodeReqResponse> nodeDataMapValidSafe = new HashMap<String, NodeReqResponse>();
 
+                /** 过滤掉不安全的请求 */
                 InternalDataProvider.getInstance()
                         .filterUnsafeOrUnnecessaryRequest(nodeDataMapValid,
                                 nodeDataMapValidSafe);
@@ -212,6 +222,7 @@ public class ExecutionManager extends UntypedActor {
                 // If there are no target hosts in the incoming message, send a
                 // message back
                 if (requestCount <= 0) {
+                    /** 想上级报告请求数量*/
                     getSender().tell(new ResponseFromManager(requestCount),
                             getSelf());
                     logger.info("req count <=0. return");
@@ -229,6 +240,7 @@ public class ExecutionManager extends UntypedActor {
                 final AsyncHttpClient asyncHttpClient = asyncHttpClientGlobal;
 
                 // always send with valid safe data.
+                /** 迭代参数,为每个请求生成actor*/
                 for (Entry<String, NodeReqResponse> entry : nodeDataMapValidSafe
                         .entrySet()) {
 
@@ -252,6 +264,7 @@ public class ExecutionManager extends UntypedActor {
                             .replaceStrByMap(
                                     nodeReqResponse.getRequestParameters(),
                                     requestPortStrOrig);
+                    /** http端口默认配置为80*/
                     int requestPort = 80;
                     try {
                         requestPort = Integer.parseInt(requestPortStr);
@@ -281,6 +294,7 @@ public class ExecutionManager extends UntypedActor {
                     /**
                      * If want to print to check
                      */
+                    /** 在ParallerTask中config设置是否输出请求头*/
                     if (task.getConfig().isPrintHttpTrueHeaderMap()) {
 
                         for (Entry<String, String> headerEntry : httpHeaderMapLocal
@@ -296,6 +310,7 @@ public class ExecutionManager extends UntypedActor {
 
                     }
 
+                    /** 判断是否是http轮训请求*/
                     if (task.getConfig().isPrintPoller()) {
                         // put the one before encoding
                         nodeReqResponse.getRequestParameters().put(

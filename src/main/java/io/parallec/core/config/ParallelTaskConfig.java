@@ -32,7 +32,7 @@ public class ParallelTaskConfig {
 
     public ParallelTaskConfig() {
         super();
-        /** 助理重试时间间隔 ,默认250ms*/
+        /** 助理director重试时间间隔 ,默认250ms*/
         this.asstManagerRetryIntervalMillis = ParallelTaskConfigDefault.asstManagerRetryIntervalMillis;
         /** akka actor 最大执行时间15s */
         this.actorMaxOperationTimeoutSec = ParallelTaskConfigDefault.actorMaxOperationTimeoutSec;

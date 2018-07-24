@@ -269,7 +269,7 @@ public class ParallelTaskManager {
         logger.info("Added task {} to the running inprogress map...",
                 task.getTaskId());
 
-        /** 暂时未看懂两个变量的作用*/
+        /** 暂时未看懂两个变量的作用(可能和http请求参数有关)*/
         boolean useReplacementVarMap = false;
         boolean useReplacementVarMapNodeSpecific = false;
         Map<String, StrStrMap> replacementVarMapNodeSpecific = null;
@@ -300,7 +300,7 @@ public class ParallelTaskManager {
         // generate content in nodedata
         /** 生成元数据内容 */
         InternalDataProvider dp = InternalDataProvider.getInstance();
-        /** 这里get了也没有操作,传入的task引用也只是进行了get操作,并未改变*/
+        /** 改变了task.parallelTaskResult属性的值*/
         dp.genNodeDataMap(task);
 
         VarReplacementProvider.getInstance()
@@ -347,6 +347,7 @@ public class ParallelTaskManager {
      * @return the batch response from manager
      */
     @SuppressWarnings("deprecation")
+    /** 发送并行任务到执行器manager */
     public ResponseFromManager sendTaskToExecutionManager(ParallelTask task) {
 
         ResponseFromManager commandResponseFromManager = null;
@@ -366,7 +367,7 @@ public class ParallelTaskManager {
                     .getTimeoutAskManagerSec(), TimeUnit.SECONDS);
             // Timeout timeout = new
             // Timeout(FiniteDuration.parse("300 seconds"));
-            /** 通过concurrent包提供的Future异步等待任务执行返回结果 */
+            /** 通过concurrent包提供的Future异步等待任务执行返回结果 ,返回的主要是*/
             Future<Object> future = Patterns.ask(executionManager,
                     new InitialRequestToManager(task), new Timeout(duration));
 
