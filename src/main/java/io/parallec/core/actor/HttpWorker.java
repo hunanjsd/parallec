@@ -57,6 +57,7 @@ import com.ning.http.util.AsyncHttpProviderUtils;
  *
  * @author Yuanteng (Jeff) Pei
  */
+/** 一个akka actor用于执行http请求，并将结果返回给父节点actor */
 public class HttpWorker extends UntypedActor {
 
     /** The actor max operation timeout sec. */

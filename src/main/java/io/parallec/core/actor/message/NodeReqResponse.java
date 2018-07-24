@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * @author Yuanteng (Jeff) Pei
  * 
  */
-/** 为目标地址保存请求参数和请求任务响应*/
+/** 为目标地址保存请求参数和请求任务响应,请求结果也保存在这个类中*/
 public class NodeReqResponse {
 
     /** The logger. */

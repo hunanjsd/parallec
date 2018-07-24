@@ -30,6 +30,7 @@ import com.typesafe.config.ConfigFactory;
 /**
  * The static akka actor system
  */
+/** AKKA最老的父节点,所有的actor都是它的子节点*/
 public final class ActorConfig {
 
     /** The conf. */
@@ -45,6 +46,7 @@ public final class ActorConfig {
         // load default
         conf = ConfigFactory.load("actorconfig.conf");
         logger.debug("Load Actor config {}", conf.toString());
+        /** 生成系统节点*/
         actorSystem = ActorSystem.create(PcConstants.ACTOR_SYSTEM, conf);
 
     }

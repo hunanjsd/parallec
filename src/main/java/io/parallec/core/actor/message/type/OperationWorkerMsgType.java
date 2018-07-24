@@ -23,6 +23,7 @@ public enum OperationWorkerMsgType {
     /** The operation timeout. */
     OPERATION_TIMEOUT,
     /** The process request. */
+    /** 这个用的最多*/
     PROCESS_REQUEST,
     /** The cancel. */
     CANCEL

@@ -52,6 +52,7 @@ import com.ning.http.client.AsyncHttpClient;
  *
  * @author Yuanteng (Jeff) Pei
  */
+/** 这个类主要是为了帮{@link ExecutionManager}生成http actor */
 public class OperationWorker extends UntypedActor {
 
     /** The client. */

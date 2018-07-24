@@ -39,7 +39,7 @@ import akka.actor.UntypedActor;
  * 
  */
 /**
- * 批量发送请求的助理类(帮助ExecutionManager发送请求)
+ * 批量发送请求的助理类(帮助ExecutionManager发送请求)产生worker
  * */
 public class AssistantExecutionManager extends UntypedActor {
 

@@ -12,12 +12,19 @@ limitations under the License.
  */
 package io.parallec.core.actor.message;
 
+import io.parallec.core.actor.ExecutionManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
  * The Class CancelTaskOnHostRequestToManager.
+ */
+
+/**
+ * 在 {@link ExecutionManager}中会为每个host产生一个actor 对象，用于执行相应的请求。
+ * 该类主要是根据host取消对应的host
  */
 public class CancelTaskOnHostRequest {
 

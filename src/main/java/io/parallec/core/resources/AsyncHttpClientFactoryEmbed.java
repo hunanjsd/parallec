@@ -46,7 +46,7 @@ import com.ning.http.client.AsyncHttpClientConfigBean;
  */
 
 /**
- * 几年来我阅码无数,觉得作者写的代码真的是简介,逻辑清晰,易懂
+ * 几年来我阅码无数,觉得作者写的代码真的是简洁,逻辑清晰,易懂
  */
 public final class AsyncHttpClientFactoryEmbed {
 

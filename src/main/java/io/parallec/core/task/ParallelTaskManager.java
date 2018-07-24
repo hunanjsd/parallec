@@ -367,7 +367,7 @@ public class ParallelTaskManager {
                     .getTimeoutAskManagerSec(), TimeUnit.SECONDS);
             // Timeout timeout = new
             // Timeout(FiniteDuration.parse("300 seconds"));
-            /** 通过concurrent包提供的Future异步等待任务执行返回结果 ,返回的主要是*/
+            /** 通过concurrent包提供的Future异步等待任务执行返回结果 ,返回的主要是验证后将被执行的request数量*/
             Future<Object> future = Patterns.ask(executionManager,
                     new InitialRequestToManager(task), new Timeout(duration));
 

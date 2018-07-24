@@ -128,6 +128,7 @@ public class ExecutionManager extends UntypedActor {
     protected Cancellable timeoutMessageCancellable = null;
 
     /** The async http client global. */
+    /** 异步的http客户端,每个ParallerTask都会自带2对 */
     protected AsyncHttpClient asyncHttpClientGlobal = null;
 
     /** The parallel task. */
