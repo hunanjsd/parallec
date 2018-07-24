@@ -79,20 +79,26 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 
  * @author Yuanteng (Jeff) Pei
  */
-
+/**
+ * 该类是parallec 启动的客户端类,在这里初始化需要的资源,以及关闭时回收资源
+ * */
 public class ParallelClient {
 
     /** The logger. must move this logger to the very front. */
+    /** 同道中人啊，都喜欢写logger而不是log*/
     private static Logger logger = LoggerFactory
             .getLogger(ParallelClient.class);
 
     /** The task manager. */
+    /** 返回单例的parallelTaskManager 对象*/
     public ParallelTaskManager taskManager = ParallelTaskManager.getInstance();
 
     /** The http client store. */
+    /** 返回单例的HttpClientStore对象 */
     public HttpClientStore httpClientStore = HttpClientStore.getInstance();
 
     /** The tcp client store. */
+    /** 返回单例模式的 TcpUdpSshPingResource对象*/
     public TcpUdpSshPingResourceStore tcpSshPingResourceStore = TcpUdpSshPingResourceStore.getInstance();
 
     /** The is closed is marked when all resources are released/not initialized. */

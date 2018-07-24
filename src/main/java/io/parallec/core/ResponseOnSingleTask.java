@@ -32,8 +32,9 @@ import java.util.Map;
  * {@link ParallelTaskBuilder#setSaveResponseToTask}
  * 
  * @author Yuanteng (Jeff) Pei
- * 
+ *
  */
+/** 默认响应结果是不会存储到singleTaskResponse中的,除非用户改变了task的配置*/
 public class ResponseOnSingleTask {
 
     /** The request. */

@@ -32,6 +32,10 @@ import org.slf4j.LoggerFactory;
  * 
  *  @author Yuanteng (Jeff) Pei
  */
+
+/**
+ * 一个守护线程不断检查ParallelTaskManager中的等待队列,对队列进行出列,执行任务
+ */
 public class CapacityAwareTaskScheduler implements Runnable {
 
     /** The Constant logger. */

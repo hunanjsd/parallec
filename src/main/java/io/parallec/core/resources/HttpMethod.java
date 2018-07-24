@@ -16,6 +16,7 @@ package io.parallec.core.resources;
 /**
  * The Enum HttpMethod.
  */
+/** 支持的http方法枚举类*/
 public enum HttpMethod {
 
     /** The head. */

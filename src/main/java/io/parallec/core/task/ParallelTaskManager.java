@@ -57,19 +57,25 @@ import akka.util.Timeout;
  * @author Teng Song 
  * 
  */
+
+/**
+ * 该类管理当前正在运行的任务和等待队列(单例模式),管理所有的ParallelTask对象
+ */
 public class ParallelTaskManager {
 
     /** The logger. */
-    // init in constructor
+    /** 为何会在构造器中初始化*/
     private static Logger logger;
 
     /** The Constant instance. */
     private final static ParallelTaskManager instance = new ParallelTaskManager();
 
     /** The scheduler. */
+    /** java中concurrent自带的任务调度 */
     private ScheduledExecutorService scheduler;
 
     /** The wait q. */
+    /** Job任务等待队列*/
     private final Queue<ParallelTask> waitQ = new ConcurrentLinkedQueue<ParallelTask>();
    
     /** The inprogress task map. */
@@ -111,6 +117,7 @@ public class ParallelTaskManager {
                     .newSingleThreadScheduledExecutor(DaemonThreadFactory
                             .getInstance());
             CapacityAwareTaskScheduler runner = new CapacityAwareTaskScheduler();
+            /** 固定频率调度守护线程,500ms的延迟,500ms的调度间隔*/
             scheduler.scheduleAtFixedRate(runner,
                     ParallecGlobalConfig.schedulerInitDelay,
                     ParallecGlobalConfig.schedulerCheckInterval,
@@ -151,6 +158,7 @@ public class ParallelTaskManager {
      */
     public int getTotalUsedCapacity() {
         int totalCapacity = 0;
+        /** 这样子迭代map感觉好优美,get */
         for (Entry<String, ParallelTask> entry : inprogressTaskMap.entrySet()) {
             ParallelTask task = entry.getValue();
             if (task != null)
@@ -178,6 +186,7 @@ public class ParallelTaskManager {
      * @param task
      *            the task
      */
+    /** 以jobId为key新增任务*/
     public synchronized void addTaskToInProgressMap(String jobId,
             ParallelTask task) {
         inprogressTaskMap.put(jobId, task);
@@ -203,6 +212,7 @@ public class ParallelTaskManager {
     /**
      * Clean wait task queue.
      */
+    /** 在等待队列重的任务,一般都是用户取消才会清除,因为是为执行的任务,不会是任务错误导致等待队列清除 */
     public synchronized void cleanWaitTaskQueue() {
 
         for (ParallelTask task : waitQ) {
@@ -225,6 +235,7 @@ public class ParallelTaskManager {
      *            the task tobe removed
      * @return true, if successful
      */
+    /** 再等待队列中根据ParallelTask移除任务*/
     public synchronized boolean removeTaskFromWaitQ(ParallelTask taskTobeRemoved) {
         boolean removed = false;
         for (ParallelTask task : waitQ) {
@@ -252,11 +263,13 @@ public class ParallelTaskManager {
     public ResponseFromManager generateUpdateExecuteTask(ParallelTask task) {
 
         // add to map now; as can only pass final
+        /** 将队列加入到正在执行任务的map中*/
         ParallelTaskManager.getInstance().addTaskToInProgressMap(
                 task.getTaskId(), task);
         logger.info("Added task {} to the running inprogress map...",
                 task.getTaskId());
 
+        /** 暂时未看懂两个变量的作用*/
         boolean useReplacementVarMap = false;
         boolean useReplacementVarMapNodeSpecific = false;
         Map<String, StrStrMap> replacementVarMapNodeSpecific = null;
@@ -285,7 +298,9 @@ public class ParallelTaskManager {
         }// end switch
 
         // generate content in nodedata
+        /** 生成元数据内容 */
         InternalDataProvider dp = InternalDataProvider.getInstance();
+        /** 这里get了也没有操作,传入的task引用也只是进行了get操作,并未改变*/
         dp.genNodeDataMap(task);
 
         VarReplacementProvider.getInstance()
@@ -295,7 +310,7 @@ public class ParallelTaskManager {
 
         batchResponseFromManager = 
                 sendTaskToExecutionManager(task);
-
+        /** 任务通过akka分发后,删除inProgressMap中对应的任务*/
         removeTaskFromInProgressMap(task.getTaskId());
         logger.info(
                 "Removed task {} from the running inprogress map... "
@@ -342,6 +357,7 @@ public class ParallelTaskManager {
                     + task.getTaskId() + " at "
                     + PcDateUtils.getNowDateTimeStr());
 
+            /** 通过akka创建任务执行的actor,就目前看来akka使用的是单机版的,后续可以考虑如何扩充为集群版本的*/
             executionManager = ActorConfig.createAndGetActorSystem().actorOf(
                     Props.create(ExecutionManager.class, task),
                     "ExecutionManager-" + task.getTaskId());
@@ -350,6 +366,7 @@ public class ParallelTaskManager {
                     .getTimeoutAskManagerSec(), TimeUnit.SECONDS);
             // Timeout timeout = new
             // Timeout(FiniteDuration.parse("300 seconds"));
+            /** 通过concurrent包提供的Future异步等待任务执行返回结果 */
             Future<Object> future = Patterns.ask(executionManager,
                     new InitialRequestToManager(task), new Timeout(duration));
 

@@ -33,15 +33,21 @@ import com.ning.http.client.AsyncHttpClient;
  * 
  * @author Yuanteng (Jeff) Pei
  */
+
+/**
+ *该类内嵌了一对 快/慢 http异步客户端和另一对自定义的 快/慢 http异步客户端,默认是是使用内嵌的快httpclient
+ */
 public class HttpClientStore {
 
     /** The http client type current default. */
     private HttpClientType httpClientTypeCurrentDefault;
 
     /** The Constant map. */
+    /** 用于存储http客户端的map*/
     private final Map<HttpClientType, AsyncHttpClient> map = new HashMap<HttpClientType, AsyncHttpClient>();
 
     /** The http client factory embed. */
+    /** 内嵌的http客户端,包含快/慢两个*/
     private AsyncHttpClientFactoryEmbed httpClientFactoryEmbed;
 
 

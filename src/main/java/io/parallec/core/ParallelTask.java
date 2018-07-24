@@ -113,10 +113,12 @@ public class ParallelTask {
     private final List<TaskErrorMeta> taskErrorMetas = new ArrayList<TaskErrorMeta>();
 
     /** The response context. */
+    /** 不能是最终的,必须能够被替换才能传数据*/
     // cannot be final. must be able to be replacable to pass data out.
     private Map<String, Object> responseContext = new HashMap<String, Object>();
 
     /** The state. */
+    /** 任务执行状态,默认是等待 */
     private ParallelTaskState state = ParallelTaskState.WAITING;;
 
     /** The task id. */
@@ -295,7 +297,10 @@ public class ParallelTask {
                 success = true;
                 break;
             case COMPLETED_WITHOUT_ERROR:
+                /** 作者没写,这个和下面的break都是我加的!虽然加不加都没啥用,但是强迫症忍不了,皮一下*/
+                break;
             case COMPLETED_WITH_ERROR:
+                break;
             case WAITING:
                 logger.info("will NO OP for cancelOnTargetHost as it is not in IN_PROGRESS state");
                 success = true;
@@ -325,7 +330,7 @@ public class ParallelTask {
     public boolean cancel(boolean sync) {
 
         boolean success = false;
-
+        /** 一开始我就给你整个try*/
         try {
             switch (state) {
             case WAITING:
@@ -425,6 +430,7 @@ public class ParallelTask {
             this.setConcurrency(ParallecGlobalConfig.concurrencyDefault);
         }
 
+        /** 每个ParallelTask都有一个默认的任务参数配置对象 */
         if (this.config == null) {
             logger.info("USE DEFAULT CONFIG: User did not specify"
                     + " config for task/actor timeout etc. ");
@@ -440,8 +446,10 @@ public class ParallelTask {
             if (this.getConcurrency() > ParallecGlobalConfig.concurrencySshLimit) {
                 logger.info("SSH CONCURRENCY LIMIT is lower. Apply value as: "
                         + ParallecGlobalConfig.concurrencySshLimit);
+                /** 默认的concurrency为1000,设置Ssl的并发度为400*/
                 this.setConcurrency(ParallecGlobalConfig.concurrencySshLimit);
             }
+            /** 不支持http 长连接*/
             if (this.httpMeta.isPollable())
                 throw new ParallelTaskInvalidException(
                         "Not support pollable job with SSH.");

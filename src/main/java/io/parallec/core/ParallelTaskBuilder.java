@@ -62,6 +62,10 @@ import com.ning.http.client.AsyncHttpClient;
  *
  * @author Yuanteng (Jeff) Pei
  */
+
+/**
+ * 这个类是Parallec一个关键类,存储所有的ParallelTask元数据
+ */
 public class ParallelTaskBuilder {
 
     /** The logger. */
@@ -245,18 +249,21 @@ public class ParallelTaskBuilder {
 
             task.setSubmitTime(System.currentTimeMillis());
 
+            /** 查看是否有*/
             if (task.getConfig().isEnableCapacityAwareTaskScheduler()) {
 
                 //late initialize the task scheduler
+                /** 懒加载ParallelTaskManager单例,初始化ParallelTaskManager守护线程*/
                 ParallelTaskManager.getInstance().initTaskSchedulerIfNot();
                 // add task to the wait queue
+                /** 将任务加载到等待队列中 */
                 ParallelTaskManager.getInstance().getWaitQ().add(task);
 
                 logger.info("Enabled CapacityAwareTaskScheduler. Submitted task to waitQ in builder.. "
                         + task.getTaskId());
 
             } else {
-
+                //直接对任务进行调度
                 logger.info(
                         "Disabled CapacityAwareTaskScheduler. Immediately execute task {} ",
                         task.getTaskId());

@@ -30,6 +30,7 @@ import org.jboss.netty.util.HashedWheelTimer;
 public class TcpUdpSshPingResourceStore {
 
     /** The singleton instance. */
+    /** 单例模式都是这样写的吗,下次我也这样写吧*/
     private final static TcpUdpSshPingResourceStore instance = new TcpUdpSshPingResourceStore();
 
     public static TcpUdpSshPingResourceStore getInstance() {

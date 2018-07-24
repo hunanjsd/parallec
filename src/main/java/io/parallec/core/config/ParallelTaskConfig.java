@@ -32,15 +32,25 @@ public class ParallelTaskConfig {
 
     public ParallelTaskConfig() {
         super();
+        /** 助理重试时间间隔 ,默认250ms*/
         this.asstManagerRetryIntervalMillis = ParallelTaskConfigDefault.asstManagerRetryIntervalMillis;
+        /** akka actor 最大执行时间15s */
         this.actorMaxOperationTimeoutSec = ParallelTaskConfigDefault.actorMaxOperationTimeoutSec;
+        /** 命令管理超时取消自己的超时时间 默认600s */
         this.timeoutInManagerSec = ParallelTaskConfigDefault.timeoutInManagerSec;
+        /** 外部director发送给manager的超时时间 610s*/
         this.timeoutAskManagerSec = ParallelTaskConfigDefault.timeoutAskManagerSec;
+        /** 打印http请求头信息 默认为:true*/
         this.printHttpTrueHeaderMap = ParallelTaskConfigDefault.printHttpTrueHeaderMap;
+
         this.printPoller = ParallelTaskConfigDefault.printPoller;
+        /** 将请求头放到task中保存, 默认为:false */
         this.saveResponseToTask = ParallelTaskConfigDefault.saveResponseToTask;
+        /** 启动容量感知调度程序,默认为:false */
         this.enableCapacityAwareTaskScheduler = ParallelTaskConfigDefault.enableCapacityAwareTaskScheduler;
+        /** 保存日志到本地,默认为:false */
         this.autoSaveLogToLocal = ParallelTaskConfigDefault.autoSaveLogToLocal;
+
         this.handlerExecutionLocation = ParallelTaskConfigDefault.handlerExecutionLocationDefault;
     }
 

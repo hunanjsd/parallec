@@ -31,6 +31,7 @@ import com.ning.http.client.AsyncHttpClient;
  * 
  * @author Yuanteng (Jeff) Pei
  */
+/** http 元数据,不包括target hosts*/
 public class HttpMeta {
     /** The logger. */
     private static Logger logger = LoggerFactory.getLogger(HttpMeta.class);

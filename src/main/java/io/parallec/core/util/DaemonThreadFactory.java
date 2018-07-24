@@ -18,6 +18,10 @@ import java.util.concurrent.ThreadFactory;
 /**
  * A factory for creating DaemonThread objects.
  */
+
+/**
+ * 一个创建守护线程的工厂对象
+ */
 public class DaemonThreadFactory implements ThreadFactory {
 
     /** The instance. */

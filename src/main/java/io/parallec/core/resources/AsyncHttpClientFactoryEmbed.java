@@ -44,6 +44,10 @@ import com.ning.http.client.AsyncHttpClientConfigBean;
  *
  * @author Yuanteng (Jeff) Pei
  */
+
+/**
+ * 几年来我阅码无数,觉得作者写的代码真的是简介,逻辑清晰,易懂
+ */
 public final class AsyncHttpClientFactoryEmbed {
 
     /** The logger. */
@@ -65,22 +69,26 @@ public final class AsyncHttpClientFactoryEmbed {
 
         try {
             // create and configure async http client
+            /** 使用的是github(https://github.com/AsyncHttpClient/async-http-client)开源的http异步客户端*/
             AsyncHttpClientConfigBean configFastClient = new AsyncHttpClientConfigBean();
 
             logger.info(
                     "FastClient: ningFastClientConnectionTimeoutMillis: {}",
                     ParallecGlobalConfig.ningFastClientConnectionTimeoutMillis);
+            /** 设置http客户端连接的超时时间*/
             configFastClient
                     .setConnectionTimeOutInMs(ParallecGlobalConfig.ningFastClientConnectionTimeoutMillis);
 
             logger.info("FastClient: ningFastClientRequestTimeoutMillis: {}",
                     ParallecGlobalConfig.ningFastClientRequestTimeoutMillis);
+            /** 设置http客户端请求超时时间 */
             configFastClient
                     .setRequestTimeoutInMs(ParallecGlobalConfig.ningFastClientRequestTimeoutMillis);
             fastClient = new AsyncHttpClient(configFastClient);
 
             // TODO added
             // configFastClient.setMaxRequestRetry(3);
+            //设置请求重试次数
 
             AsyncHttpClientConfigBean configSlowClient = new AsyncHttpClientConfigBean();
             configSlowClient
