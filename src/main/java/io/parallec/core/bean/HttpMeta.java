@@ -39,6 +39,7 @@ public class HttpMeta {
     private HttpMethod httpMethod;
 
     /** The request url postfix. */
+    /** url的前缀,一般都是制定很多个host,使用同一个前缀*/
     private String requestUrlPostfix;
 
     /**  The request entityBody. */
@@ -54,6 +55,7 @@ public class HttpMeta {
     private HttpPollerProcessor httpPollerProcessor = null;
 
     /** The is pollable. */
+    /** 是否支持轮训*/
     private boolean isPollable = false;
 
     /** The async http client. */
@@ -73,6 +75,7 @@ public class HttpMeta {
         this.requestPort = null;
         this.parallecHeader = null;
         this.httpPollerProcessor = null;
+        /** 默认是不支持轮训的*/
         this.isPollable = false;
         this.asyncHttpClient = null;
         this.responseHeaderMeta = null;

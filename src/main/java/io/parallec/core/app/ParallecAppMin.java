@@ -12,6 +12,7 @@ limitations under the License.
  */
 package io.parallec.core.app;
 
+import io.parallec.core.HostsSourceType;
 import io.parallec.core.ParallecResponseHandler;
 import io.parallec.core.ParallelClient;
 import io.parallec.core.ResponseOnSingleTask;
@@ -30,10 +31,11 @@ public class ParallecAppMin {
      *            the arguments
      */
     public static void main(String[] args) {
-
+//
         ParallelClient pc = new ParallelClient();
-        pc.prepareHttpGet("/validateInternals.html")
+        pc.prepareHttpGet("")
                 .setConcurrency(1000)
+//                .setTargetHostsFromLineByLineText("/Users/simo/IdeaProjects/parallec/userdata/sample_target_hosts_top500.txt",HostsSourceType.LOCAL_FILE)
                 .setTargetHostsFromString(
                         "www.parallec.io www.jeffpei.com www.restcommander.com")
                 .execute(new ParallecResponseHandler() {

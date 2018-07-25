@@ -41,6 +41,7 @@ public class PcTargetHostsUtils {
      *            the remove duplicate
      * @return the node list from string line seperate or space seperate
      */
+    /** 根据空格符和换行符分割target host*/
     public static List<String> getNodeListFromStringLineSeperateOrSpaceSeperate(
             String listStr, boolean removeDuplicate) {
 
@@ -71,6 +72,7 @@ public class PcTargetHostsUtils {
      *            the list
      * @return the int
      */
+    /** 消除double host*/
     public static int removeDuplicateNodeList(List<String> list) {
 
         int originCount = list.size();
