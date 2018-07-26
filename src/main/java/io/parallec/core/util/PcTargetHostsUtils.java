@@ -72,11 +72,12 @@ public class PcTargetHostsUtils {
      *            the list
      * @return the int
      */
-    /** 消除double host*/
+    /** 消灭小重复的target host*/
     public static int removeDuplicateNodeList(List<String> list) {
 
         int originCount = list.size();
         // add elements to all, including duplicates
+        /** set 集合不会有重复*/
         HashSet<String> hs = new LinkedHashSet<String>();
         hs.addAll(list);
         list.clear();

@@ -184,6 +184,7 @@ public class ExecutionManager extends UntypedActor {
                         .getRequestProtocol();
 
                 // Get request parameters to construct a REST CALL
+                /** host 的后缀,像www.google.com/abtc.html中的abtc.html就属于后缀*/
                 final String requestUrlPrefixOrig = httpMeta
                         .getRequestUrlPostfix();
                 final HttpMethod httpMethod = httpMeta.getHttpMethod();
@@ -244,7 +245,7 @@ public class ExecutionManager extends UntypedActor {
                 /** 迭代参数,为每个请求生成actor*/
                 for (Entry<String, NodeReqResponse> entry : nodeDataMapValidSafe
                         .entrySet()) {
-
+                    /** 迭代map时key使用final修饰*/
                     final String targetHost = entry.getKey();
                     NodeReqResponse nodeReqResponse = entry.getValue();
 

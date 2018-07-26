@@ -227,7 +227,9 @@ public class ParallelTaskBuilder {
     /** 参数handler是用于处理task请求返回结构的,一般都是自定义的*/
     public ParallelTask execute(ParallecResponseHandler handler) {
 
-        /** ParallelClient 生成ParallelBuilder,ParallelBuilder生成ParallelTask */
+        /** ParallelClient 生成ParallelBuilder,ParallelBuilder生成ParallelTask ,这个是默认放回的,在下面try中会对这个
+         * 默认的task进行重定义
+         * */
         ParallelTask task = new ParallelTask();
 
         try {
@@ -503,6 +505,7 @@ public class ParallelTaskBuilder {
      *            the target hosts str
      * @return the parallel task builder
      */
+    /** 从输入的String中提取target host(默认使用空格符和换行符分割target host)*/
     public ParallelTaskBuilder setTargetHostsFromString(String targetHostsStr) {
 
         this.targetHosts = targetHostBuilder.setTargetHostsFromString(targetHostsStr);

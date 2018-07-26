@@ -73,7 +73,7 @@
 		<openpojo.version>0.8.0</openpojo.version>
 		<jsonpath.version>2.0.0</jsonpath.version>
 		<spring-beans.version>4.2.1.RELEASE</spring-beans.version>
-
+		<jdbc.version>6.0.2</jdbc.version>
 	</properties>
 
 	<dependencies>
@@ -189,6 +189,13 @@
 			<artifactId>json-path</artifactId>
 			<version>${jsonpath.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${jdbc.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<distributionManagement>

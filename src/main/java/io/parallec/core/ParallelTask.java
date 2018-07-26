@@ -190,6 +190,7 @@ public class ParallelTask {
         this.state = ParallelTaskState.WAITING;
 
         // use default config
+        /** 使用默认的任务配置*/
         this.config = new ParallelTaskConfig();
 
     }
@@ -526,6 +527,7 @@ public class ParallelTask {
      *
      * @return the string
      */
+    /** 生成任务task id*/
     public String generateTaskId() {
         final String uuid = UUID.randomUUID().toString().substring(0, 12);
         int size = this.targetHostMeta == null ? 0 : this.targetHostMeta
