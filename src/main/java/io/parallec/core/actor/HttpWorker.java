@@ -15,7 +15,6 @@ package io.parallec.core.actor;
 import io.parallec.core.actor.message.ResponseOnSingeRequest;
 import io.parallec.core.actor.message.type.RequestWorkerMsgType;
 import io.parallec.core.bean.ResponseHeaderMeta;
-import io.parallec.core.config.ParallecGlobalConfig;
 import io.parallec.core.exception.ActorMessageTypeInvalidException;
 import io.parallec.core.exception.HttpRequestCreateException;
 import io.parallec.core.resources.HttpMethod;
@@ -26,6 +25,7 @@ import io.parallec.core.util.PcHttpUtils;
 import io.parallec.core.util.PcStringUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.asynchttpclient.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,12 +45,7 @@ import akka.actor.Cancellable;
 import akka.actor.UntypedActor;
 
 import com.google.common.base.Strings;
-import com.ning.http.client.AsyncCompletionHandler;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.AsyncHttpClient.BoundRequestBuilder;
-import com.ning.http.client.ListenableFuture;
-import com.ning.http.client.Response;
-import com.ning.http.util.AsyncHttpProviderUtils;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -122,10 +118,10 @@ public class HttpWorker extends UntypedActor {
      * @param responseHeaderMeta the response header meta
      */
     public HttpWorker(final int actorMaxOperationTimeoutSec,
-            final AsyncHttpClient client, final String requestUrl,
-            final HttpMethod httpMethod, final String postData,
-            final Map<String, String> httpHeaderMap,
-            final ResponseHeaderMeta responseHeaderMeta
+                      final AsyncHttpClient client, final String requestUrl,
+                      final HttpMethod httpMethod, final String postData,
+                      final Map<String, String> httpHeaderMap,
+                      final ResponseHeaderMeta responseHeaderMeta
 
     ) {
         this.actorMaxOperationTimeoutSec = actorMaxOperationTimeoutSec;
@@ -133,8 +129,9 @@ public class HttpWorker extends UntypedActor {
         this.requestUrl = requestUrl;
         this.httpMethod = httpMethod;
         this.postData = postData;
-        if (httpHeaderMap != null)
+        if (httpHeaderMap != null){
             this.httpHeaderMap.putAll(httpHeaderMap);
+        }
         this.responseHeaderMeta = responseHeaderMeta;
 
     }
@@ -180,13 +177,6 @@ public class HttpWorker extends UntypedActor {
             PcHttpUtils.addHeaders(builder, this.httpHeaderMap);
             if (!Strings.isNullOrEmpty(postData)) {
                 builder.setBody(postData);
-                String charset = "";
-                if (null!=this.httpHeaderMap) {
-                    charset = this.httpHeaderMap.get("charset");
-                }
-                if(!Strings.isNullOrEmpty(charset)) {
-                    builder.setBodyEncoding(charset);
-                }
             }
 
         } catch (Exception t) {
@@ -250,8 +240,9 @@ public class HttpWorker extends UntypedActor {
                             "Request was CANCELLED.................{}",
                             requestUrl);
                     cancelCancellable();
-                    if (sender == null)
+                    if (sender == null){
                         sender = getSender();
+                    }
                     reply(null, true, PcConstants.REQUEST_CANCELED,
                             PcConstants.REQUEST_CANCELED, PcConstants.NA,
                             PcConstants.NA_INT, null);
@@ -344,7 +335,7 @@ public class HttpWorker extends UntypedActor {
     private void reply(final String response, final boolean error,
             final String errorMessage, final String stackTrace,
             final String statusCode, final int statusCodeInt,
-            Map<String, List<String>> responseHeaders) {
+            Map<String, String > responseHeaders) {
 
         if (!sentReply) {
             // must update sentReply first to avoid duplicated msg.
@@ -374,21 +365,19 @@ public class HttpWorker extends UntypedActor {
      */
     /** 发送httpclient获取的数据到父actor*/
     public ResponseOnSingeRequest onComplete(Response response) {
-
         cancelCancellable();
         try {
-            
-            Map<String, List<String>> responseHeaders = null;
+
+            Map<String, String > responseHeaders = null;
             if (responseHeaderMeta != null) {
-                responseHeaders = new LinkedHashMap<String, List<String>>();
+                responseHeaders = new LinkedHashMap<>();
                 if (responseHeaderMeta.isGetAll()) {
-                    for (Map.Entry<String, List<String>> header : response
-                            .getHeaders()) {
-                        responseHeaders.put(header.getKey().toLowerCase(Locale.ROOT), header.getValue());
+                    for(Map.Entry<String ,String > header : response.getHeaders()){
+                        responseHeaders.put(header.getKey(),header.getValue());
                     }
                 } else {
                     for (String key : responseHeaderMeta.getKeys()) {
-                        if (response.getHeaders().containsKey(key)) {
+                        if (response.getHeaders().contains(key)) {
                             responseHeaders.put(key.toLowerCase(Locale.ROOT),
                                     response.getHeaders().get(key));
                         }
@@ -398,17 +387,9 @@ public class HttpWorker extends UntypedActor {
 
             int statusCodeInt = response.getStatusCode();
             String statusCode = statusCodeInt + " " + response.getStatusText();
-            String charset = ParallecGlobalConfig.httpResponseBodyCharsetUsesResponseContentType &&
-                    response.getContentType()!=null ? 
-                    AsyncHttpProviderUtils.parseCharset(response.getContentType())
-                    : ParallecGlobalConfig.httpResponseBodyDefaultCharset;
-            if(charset == null){
-                getLogger().error("charset is not provided from response content type. Use default");
-                charset = ParallecGlobalConfig.httpResponseBodyDefaultCharset; 
-            }
-            reply(response.getResponseBody(charset), false, null, null, statusCode,
+            reply(response.getResponseBody(StandardCharsets.UTF_8), false, null, null, statusCode,
                     statusCodeInt, responseHeaders);
-        } catch (IOException e) {
+        } catch (Exception e) {
             getLogger().error("fail response.getResponseBody " + e);
         }
 

@@ -31,12 +31,12 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
+import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.DefaultAsyncHttpClientConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.AsyncHttpClientConfigBean;
+import static org.asynchttpclient.Dsl.asyncHttpClient;
+import static org.asynchttpclient.Dsl.config;
 
 
 /**
@@ -70,32 +70,31 @@ public final class AsyncHttpClientFactoryEmbed {
         try {
             // create and configure async http client
             /** 使用的是github(https://github.com/AsyncHttpClient/async-http-client)开源的http异步客户端*/
-            AsyncHttpClientConfigBean configFastClient = new AsyncHttpClientConfigBean();
+            /** 设置http客户端连接的超时时间*/
+            /** 设置http客户端请求超时时间 */
+            DefaultAsyncHttpClientConfig.Builder configFastClient = config().setConnectTimeout(ParallecGlobalConfig.ningFastClientConnectionTimeoutMillis)
+                    .setRequestTimeout(ParallecGlobalConfig.ningSlowClientRequestTimeoutMillis);
 
             logger.info(
                     "FastClient: ningFastClientConnectionTimeoutMillis: {}",
                     ParallecGlobalConfig.ningFastClientConnectionTimeoutMillis);
             /** 设置http客户端连接的超时时间*/
-            configFastClient
-                    .setConnectionTimeOutInMs(ParallecGlobalConfig.ningFastClientConnectionTimeoutMillis);
 
             logger.info("FastClient: ningFastClientRequestTimeoutMillis: {}",
                     ParallecGlobalConfig.ningFastClientRequestTimeoutMillis);
             /** 设置http客户端请求超时时间 */
-            configFastClient
-                    .setRequestTimeoutInMs(ParallecGlobalConfig.ningFastClientRequestTimeoutMillis);
-            fastClient = new AsyncHttpClient(configFastClient);
+
+            fastClient = asyncHttpClient(configFastClient);
 
             // TODO added
             // configFastClient.setMaxRequestRetry(3);
             //设置请求重试次数
 
-            AsyncHttpClientConfigBean configSlowClient = new AsyncHttpClientConfigBean();
-            configSlowClient
-                    .setConnectionTimeOutInMs(ParallecGlobalConfig.ningSlowClientConnectionTimeoutMillis);
-            configSlowClient
-                    .setRequestTimeoutInMs(ParallecGlobalConfig.ningSlowClientRequestTimeoutMillis);
-            slowClient = new AsyncHttpClient(configSlowClient);
+            DefaultAsyncHttpClientConfig.Builder configSlowClient = config().setConnectTimeout(ParallecGlobalConfig.ningFastClientConnectionTimeoutMillis)
+                    .setRequestTimeout(ParallecGlobalConfig.ningSlowClientRequestTimeoutMillis);
+
+            slowClient = asyncHttpClient(configSlowClient);
+
 
             disableCertificateVerification();
         } catch (Exception e) {

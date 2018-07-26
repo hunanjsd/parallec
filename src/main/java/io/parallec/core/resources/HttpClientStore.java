@@ -12,11 +12,14 @@ limitations under the License.
  */
 package io.parallec.core.resources;
 
+import org.asynchttpclient.AsyncHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.ning.http.client.AsyncHttpClient;
 
 
 /**
@@ -38,13 +41,14 @@ import com.ning.http.client.AsyncHttpClient;
  *该类内嵌了一对 快/慢 http异步客户端和另一对自定义的 快/慢 http异步客户端,默认是是使用内嵌的快httpclient
  */
 public class HttpClientStore {
+    private final Logger logger = LoggerFactory.getLogger(HttpClientStore.class);
 
     /** The http client type current default. */
     private HttpClientType httpClientTypeCurrentDefault;
 
     /** The Constant map. */
     /** 用于存储http客户端的map*/
-    private final Map<HttpClientType, AsyncHttpClient> map = new HashMap<HttpClientType, AsyncHttpClient>();
+    private final Map<HttpClientType, AsyncHttpClient> map = new HashMap<>();
 
     /** The http client factory embed. */
     /** 内嵌的http客户端,包含快/慢两个*/
@@ -98,8 +102,13 @@ public class HttpClientStore {
 
         for (Entry<HttpClientType, AsyncHttpClient> entry : map.entrySet()) {
             AsyncHttpClient client = entry.getValue();
-            if (client != null)
-                client.close();
+            if (client != null){
+                try {
+                    client.close();
+                }catch (IOException e){
+                    logger.error(e.getMessage(),e);
+                }
+            }
         }
 
     }

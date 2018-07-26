@@ -12,10 +12,7 @@ limitations under the License.
  */
 package io.parallec.core.app;
 
-import io.parallec.core.HostsSourceType;
-import io.parallec.core.ParallecResponseHandler;
-import io.parallec.core.ParallelClient;
-import io.parallec.core.ResponseOnSingleTask;
+import io.parallec.core.*;
 
 import java.util.Map;
 
@@ -37,7 +34,8 @@ public class ParallecAppMin {
                 .setConcurrency(1000)
 //                .setTargetHostsFromLineByLineText("/Users/simo/IdeaProjects/parallec/userdata/sample_target_hosts_top500.txt",HostsSourceType.LOCAL_FILE)
                 .setTargetHostsFromString(
-                        "www.parallec.io www.jeffpei.com www.restcommander.com")
+                        "www.okex.com/api/v1/kline.do?symbol=xas_eth&type=1min&size=20")
+                .setProtocol(RequestProtocol.HTTPS)
                 .execute(new ParallecResponseHandler() {
 
                     @Override

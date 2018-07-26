@@ -43,12 +43,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.asynchttpclient.AsyncHttpClient;
 import org.jboss.netty.channel.ChannelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
-import com.ning.http.client.AsyncHttpClient;
 
 
 // TODO: Auto-generated Javadoc
@@ -149,10 +149,12 @@ public class ParallelTaskBuilder {
      */
     public ParallelTaskBuilder setResponseContext(
             Map<String, Object> responseContext) {
-        if (responseContext != null)
+        if (responseContext != null){
             this.responseContext = responseContext;
-        else
+        }
+        else{
             logger.error("context cannot be null. skip set.");
+        }
         return this;
     }
 
@@ -274,7 +276,7 @@ public class ParallelTaskBuilder {
                         task.getTaskId());
 
                 Runnable director = new Runnable() {
-
+                    @Override
                     public void run() {
                         ParallelTaskManager.getInstance()
                                 .generateUpdateExecuteTask(taskReal);
@@ -805,7 +807,9 @@ public class ParallelTaskBuilder {
         int i = 0;
         for (StrStrMap ssm : replacementVarMapList) {
             if (ssm == null)
+            {
                 continue;
+            }
             String hostName = PcConstants.API_PREFIX + i;
             ssm.addPair(PcConstants.UNIFORM_TARGET_HOST_VAR, uniformTargetHost);
             replacementVarMapNodeSpecific.put(hostName, ssm);
@@ -921,6 +925,7 @@ public class ParallelTaskBuilder {
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
         return "PTaskBuilder [acm=" + httpMeta + ", nodeGroupSourceMetadata="
                 + targetHostMeta + ", replacementVarMapNodeSpecific="

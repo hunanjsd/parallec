@@ -77,7 +77,7 @@ public class ResponseOnSingleTask {
     final private Map<String, String> pollingHistoryMap = new LinkedHashMap<String, String>();
 
     /** The response headers. */
-    private Map<String, List<String>> responseHeaders;
+    private Map<String, String > responseHeaders;
     
     /**
      * Gets the polling history map.
@@ -326,7 +326,7 @@ public class ResponseOnSingleTask {
      *
      * @return the response headers
      */
-    public Map<String, List<String>> getResponseHeaders() {
+    public Map<String, String > getResponseHeaders() {
         return responseHeaders;
     }
 
@@ -335,7 +335,7 @@ public class ResponseOnSingleTask {
      *
      * @param responseHeaders the response headers
      */
-    public void setResponseHeaders(Map<String, List<String>> responseHeaders) {
+    public void setResponseHeaders(Map<String, String > responseHeaders) {
         this.responseHeaders = responseHeaders;
     }
 

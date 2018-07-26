@@ -4,6 +4,7 @@ import com.aicoin.source.TargetHostSource;
 import com.aicoin.source.impl.MysqlTargetHostSource;
 import io.parallec.core.ParallecResponseHandler;
 import io.parallec.core.ParallelClient;
+import io.parallec.core.RequestProtocol;
 import io.parallec.core.ResponseOnSingleTask;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class mysqlDemo {
         pc.prepareHttpGet("")
                 .setConcurrency(1000)
                 .setTargetHostsFromList(host)
+                .setProtocol(RequestProtocol.HTTPS)
                 .execute(new ParallecResponseHandler() {
 
                     @Override

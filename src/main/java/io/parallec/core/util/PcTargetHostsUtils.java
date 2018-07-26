@@ -47,7 +47,8 @@ public class PcTargetHostsUtils {
 
         List<String> nodes = new ArrayList<String>();
 
-        for (String token : listStr.split("[\\r?\\n| +]+")) {
+        for (String token : listStr.split(" ")) {
+//        for (String token : listStr.split("[\\r?\\n| +]+")) {
 
             // 20131025: fix if fqdn has space in the end.
             if (token != null && !token.trim().isEmpty()) {

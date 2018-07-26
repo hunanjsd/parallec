@@ -57,7 +57,7 @@ public class ResponseOnSingeRequest {
 
     
     /** The response headers: keys are lower cased. */
-    private Map<String, List<String>> responseHeaders;
+    private Map<String, String > responseHeaders;
     
     
     /**
@@ -136,7 +136,7 @@ public class ResponseOnSingeRequest {
      */
     public ResponseOnSingeRequest(String responseBody,
             boolean failObtainResponse, String errorMessage, String stackTrace,
-            String statusCode, int statusCodeInt, String receiveTime,  Map<String, List<String>> responseHeaders) {
+            String statusCode, int statusCodeInt, String receiveTime,  Map<String, String > responseHeaders) {
         super();
 
         this.responseBody = responseBody;
@@ -263,7 +263,7 @@ public class ResponseOnSingeRequest {
      *
      * @return the response headers
      */
-    public Map<String, List<String>> getResponseHeaders() {
+    public Map<String, String > getResponseHeaders() {
         return responseHeaders;
     }
 
@@ -272,7 +272,7 @@ public class ResponseOnSingeRequest {
      *
      * @param responseHeaders the response headers
      */
-    public void setResponseHeaders(Map<String, List<String>> responseHeaders) {
+    public void setResponseHeaders(Map<String, String > responseHeaders) {
         this.responseHeaders = responseHeaders;
     }
 

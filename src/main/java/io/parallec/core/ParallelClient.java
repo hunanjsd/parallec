@@ -12,7 +12,6 @@ limitations under the License.
  */
 package io.parallec.core;
 
-import com.ning.http.client.AsyncHttpClient;
 import io.parallec.core.actor.ActorConfig;
 import io.parallec.core.monitor.MonitorProvider;
 import io.parallec.core.resources.HttpClientStore;
@@ -20,6 +19,7 @@ import io.parallec.core.resources.HttpClientType;
 import io.parallec.core.resources.HttpMethod;
 import io.parallec.core.resources.TcpUdpSshPingResourceStore;
 import io.parallec.core.task.ParallelTaskManager;
+import org.asynchttpclient.AsyncHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

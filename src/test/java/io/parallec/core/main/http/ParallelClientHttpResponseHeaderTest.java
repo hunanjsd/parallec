@@ -79,9 +79,9 @@ public class ParallelClientHttpResponseHeaderTest extends TestBase {
                     public void onCompleted(ResponseOnSingleTask res,
                             Map<String, Object> responseContext) {
 
-                        Map<String, List<String>> responseHeaders = res
+                        Map<String, String > responseHeaders = res
                                 .getResponseHeaders();
-                        for (Entry<String, List<String>> entry : responseHeaders
+                        for (Entry<String, String> entry : responseHeaders
                                 .entrySet()) {
                             logger.info(
                                     "response header (lowed case key): {} - {}",
@@ -129,9 +129,9 @@ public class ParallelClientHttpResponseHeaderTest extends TestBase {
                     public void onCompleted(ResponseOnSingleTask res,
                             Map<String, Object> responseContext) {
 
-                        Map<String, List<String>> responseHeaders = res
+                        Map<String, String > responseHeaders = res
                                 .getResponseHeaders();
-                        for (Entry<String, List<String>> entry : responseHeaders
+                        for (Entry<String, String> entry : responseHeaders
                                 .entrySet()) {
                             logger.info(
                                     "response header (lowed case key): {} - {}",

@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.asynchttpclient.AsyncHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,6 @@ import akka.actor.Cancellable;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 
-import com.ning.http.client.AsyncHttpClient;
 
 
 
@@ -355,9 +355,11 @@ public class OperationWorker extends UntypedActor {
 
         if (request.getProtocol() == RequestProtocol.HTTP 
                 || request.getProtocol() == RequestProtocol.HTTPS) {
-            String urlComplete = String.format("%s://%s:%d%s", request
-                    .getProtocol().toString(), trueTargetNode, request
-                    .getPort(), request.getResourcePath());
+//            String urlComplete = String.format("%s://%s:%d%s", request
+//                    .getProtocol().toString(), trueTargetNode, request
+//                    .getPort(), request.getResourcePath());
+
+            String urlComplete = trueTargetNode;
 
             // http://stackoverflow.com/questions/1600291/validating-url-in-java
             if (!PcHttpUtils.isUrlValid(urlComplete.trim())) {
@@ -520,7 +522,7 @@ public class OperationWorker extends UntypedActor {
     @SuppressWarnings("deprecation")
     private final void reply(final boolean error, final String errorMessage,
             final String stackTrace, final String statusCode,
-            final int statusCodeInt, final String receiveTime,  Map<String, List<String>> responseHeaders) {
+            final int statusCodeInt, final String receiveTime,  Map<String, String > responseHeaders) {
         
         if (!sentReply) {
             sentReply = true;

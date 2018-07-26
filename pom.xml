@@ -74,6 +74,7 @@
 		<jsonpath.version>2.0.0</jsonpath.version>
 		<spring-beans.version>4.2.1.RELEASE</spring-beans.version>
 		<jdbc.version>6.0.2</jdbc.version>
+		<async-http-client.version>2.5.0</async-http-client.version>
 	</properties>
 
 	<dependencies>
@@ -119,8 +120,13 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${commons-lang3.version}</version>
 		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.ning</groupId>-->
+			<!--<artifactId>async-http-client</artifactId>-->
+			<!--<version>${async-http-client.version}</version>-->
+		<!--</dependency>-->
 		<dependency>
-			<groupId>com.ning</groupId>
+			<groupId>org.asynchttpclient</groupId>
 			<artifactId>async-http-client</artifactId>
 			<version>${async-http-client.version}</version>
 		</dependency>

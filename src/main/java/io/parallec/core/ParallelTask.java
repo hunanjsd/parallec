@@ -47,12 +47,12 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.io.FileUtils;
+import org.asynchttpclient.AsyncHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import akka.actor.ActorRef;
 
-import com.ning.http.client.AsyncHttpClient;
 
 /**
  * The key class represents a onetime execution on multiple requests. It
@@ -257,9 +257,9 @@ public class ParallelTask {
 
         this.responsedNum = 0;
         this.state = ParallelTaskState.WAITING;
-        if (responseContext != null)
+        if (responseContext != null){
             this.responseContext = responseContext;
-
+        }
         this.replacementVarMapNodeSpecific
                 .putAll(replacementVarMapNodeSpecific);
         this.replacementVarMap.putAll(replacementVarMap);

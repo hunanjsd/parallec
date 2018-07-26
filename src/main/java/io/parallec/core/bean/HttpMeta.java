@@ -19,10 +19,10 @@ import io.parallec.core.resources.HttpClientStore;
 import io.parallec.core.resources.HttpMethod;
 import io.parallec.core.util.PcConstants;
 
+import org.asynchttpclient.AsyncHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ning.http.client.AsyncHttpClient;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -116,16 +116,18 @@ public class HttpMeta {
                     .getCurrentDefaultClient();
         }
         
-        if (this.getHttpMethod() == null)
+        if (this.getHttpMethod() == null){
             throw new ParallelTaskInvalidException("Missing getHttpMethod!");
+        }
         if (this.getHeaderMetadata() == null) {
             logger.info("USE DEFAULT EMPTY HEADER: Did not specify HTTP header. Will use empty header."
                     + " Use .setHeaders to add headers");
             this.setHeaderMetadata(new ParallecHeader());
         }
         // if null it is OK, just set as the default
-        if (this.getEntityBody() == null)
-                               setEntityBody(PcConstants.COMMAND_VAR_DEFAULT_REQUEST_CONTENT);
+        if (this.getEntityBody() == null){
+            setEntityBody(PcConstants.COMMAND_VAR_DEFAULT_REQUEST_CONTENT);
+        }
 
         if (this.getRequestPort() == null) {
             setRequestPort("80");
