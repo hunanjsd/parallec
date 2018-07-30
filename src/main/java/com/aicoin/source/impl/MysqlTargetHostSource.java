@@ -20,7 +20,7 @@ public class MysqlTargetHostSource implements TargetHostSource {
 
     @Override
     public List<String > getTargetHosts(){
-        String sql = "SELECT url FROM coin_config where platform = \"wex\" ";
+        String sql = "SELECT url FROM coin_config  ";
         String colmunName = "url";
         return MysqlUtil.getInstance().query(sql,colmunName);
     }

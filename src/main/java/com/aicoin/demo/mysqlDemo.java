@@ -30,7 +30,7 @@ public class mysqlDemo {
                     @Override
                     public void onCompleted(ResponseOnSingleTask res,
                                             Map<String, Object> responseContext) {
-                        System.out.println(res);
+                        System.out.println("time"+res.getReceiveTimeInManager()+",response:"+res.getResponseContent());
                     }
                 });
         System.out.println("execute all url cast time:"+(System.currentTimeMillis()-startExecuteTime));

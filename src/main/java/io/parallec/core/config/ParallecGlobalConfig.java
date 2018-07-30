@@ -39,16 +39,16 @@ public class ParallecGlobalConfig {
     public static long schedulerInitDelay = 500L;
 
     /** The ning slow client request timeout millis. */
-    public static int ningSlowClientRequestTimeoutMillis = 60000;
+    public static int ningSlowClientRequestTimeoutMillis = 10000;
 
     /** The ning slow client connection timeout millis. */
     public static int ningSlowClientConnectionTimeoutMillis = 15000;
 
     /** The ning fast client request timeout millis. */
-    public static int ningFastClientRequestTimeoutMillis = 14000;
+    public static int ningFastClientRequestTimeoutMillis = 3000;
 
     /** The ning fast client connection timeout millis. */
-    public static int ningFastClientConnectionTimeoutMillis = 4000;
+    public static int ningFastClientConnectionTimeoutMillis = 3000;
 
     /** The ssh connection timeout millis default. */
     public static int sshConnectionTimeoutMillisDefault = 5000;
@@ -109,10 +109,10 @@ public class ParallecGlobalConfig {
     public static int logAllResponseIfTotalLessThan = 11;
     
     /** The url connection connect timeout millis. Used when load target host from URL/CMS*/
-    public static int urlConnectionConnectTimeoutMillis = 15000;
+    public static int urlConnectionConnectTimeoutMillis = 3000;
     
     /** The url connection read timeout millis. Used when load target host from URL/CMS*/
-    public static int urlConnectionReadTimeoutMillis = 5000;
+    public static int urlConnectionReadTimeoutMillis = 3000;
     
     /** The default charset when getting the response body for http*/
     public static String httpResponseBodyDefaultCharset = "UTF-8";

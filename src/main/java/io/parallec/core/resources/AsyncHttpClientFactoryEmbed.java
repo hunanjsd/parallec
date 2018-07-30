@@ -90,7 +90,7 @@ public final class AsyncHttpClientFactoryEmbed {
             // configFastClient.setMaxRequestRetry(3);
             //设置请求重试次数
 
-            DefaultAsyncHttpClientConfig.Builder configSlowClient = config().setConnectTimeout(ParallecGlobalConfig.ningFastClientConnectionTimeoutMillis)
+            DefaultAsyncHttpClientConfig.Builder configSlowClient = config().setConnectTimeout(ParallecGlobalConfig.ningSlowClientConnectionTimeoutMillis)
                     .setRequestTimeout(ParallecGlobalConfig.ningSlowClientRequestTimeoutMillis);
 
             slowClient = asyncHttpClient(configSlowClient);

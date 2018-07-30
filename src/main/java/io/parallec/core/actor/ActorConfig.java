@@ -12,6 +12,7 @@ limitations under the License.
  */
 package io.parallec.core.actor;
 
+import akka.dispatch.sysmsg.Terminate;
 import io.parallec.core.util.PcConstants;
 
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import scala.concurrent.Await;
 import scala.concurrent.duration.Duration;
 import scala.concurrent.duration.FiniteDuration;
 import akka.actor.ActorSystem;
@@ -57,7 +59,7 @@ public final class ActorConfig {
      * @return the actor system
      */
     public static ActorSystem createAndGetActorSystem() {
-        if (actorSystem == null || actorSystem.isTerminated()) {
+        if (actorSystem == null || actorSystem.terminate().isCompleted()) {
             actorSystem = ActorSystem.create(PcConstants.ACTOR_SYSTEM, conf);
         }
         return actorSystem;
@@ -73,10 +75,16 @@ public final class ActorConfig {
      * Shut down actor system force.
      */
     public static void shutDownActorSystemForce() {
-        if (!actorSystem.isTerminated()) {
+        if (!actorSystem.terminate().isCompleted()) {
             logger.info("shutting down actor system...");
-            actorSystem.shutdown();
-            actorSystem.awaitTermination(timeOutDuration);
+            actorSystem.terminate();
+            try {
+                actorSystem.terminate().wait(timeOutDuration.toMillis());
+            }catch (InterruptedException e){
+                logger.error(e.getMessage(),e);
+            }
+//            actorSystem.shutdown();
+//            actorSystem.awaitTermination(timeOutDuration);
             logger.info("Actor system has been shut down.");
         } else {
             logger.info("Actor system has been terminated already. NO OP.");
