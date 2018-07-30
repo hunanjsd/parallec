@@ -143,6 +143,7 @@ public class HttpWorker extends UntypedActor {
      * @throws HttpRequestCreateException
      *             the http request create exception
      */
+    /** 构造http请求 */
     public BoundRequestBuilder createRequest()
             throws HttpRequestCreateException {
         BoundRequestBuilder builder = null;
@@ -200,6 +201,7 @@ public class HttpWorker extends UntypedActor {
         try {
             if (message instanceof RequestWorkerMsgType) {
                 switch ((RequestWorkerMsgType) message) {
+                    /** 处理父节点actor发送1过来的请求 */
                 case PROCESS_REQUEST:
                     tryCount++;
 
@@ -212,6 +214,7 @@ public class HttpWorker extends UntypedActor {
                         // killed when timeout.
                         responseFuture = request.execute(new HttpAsyncHandler(
                                 this));
+                        /** 拿到timeout时间做定时调度检查,超过timeout时间后将反馈发送到父actor中 */
                         timeoutDuration = Duration.create(
                                 actorMaxOperationTimeoutSec, TimeUnit.SECONDS);
 
@@ -247,7 +250,7 @@ public class HttpWorker extends UntypedActor {
                             PcConstants.REQUEST_CANCELED, PcConstants.NA,
                             PcConstants.NA_INT, null);
                     break;
-
+                /** 处理次actor异常的情况 */
                 case PROCESS_ON_EXCEPTION:
 
                     String errorSummary = PcErrorMsgUtils.replaceErrorMsg(cause
@@ -272,7 +275,7 @@ public class HttpWorker extends UntypedActor {
                     reply(null, true, errorMsg, errorMsg, PcConstants.NA,
                             PcConstants.NA_INT, null);
                     break;
-
+                /** 检查自己的状态,发送PROCESS_ON_EXCEPTION给自己 */
                 case CHECK_FUTURE_STATE:
                 default:
                     this.cause = new ActorMessageTypeInvalidException(
@@ -283,6 +286,7 @@ public class HttpWorker extends UntypedActor {
                     break;
                 }
             } else {
+                /** 处理未定义的msg */
                 unhandled(message);
                 this.cause = new ActorMessageTypeInvalidException(
                         "ActorMessageTypeInvalidException error for url "

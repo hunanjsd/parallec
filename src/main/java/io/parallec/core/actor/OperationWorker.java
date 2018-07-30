@@ -155,6 +155,7 @@ public class OperationWorker extends UntypedActor {
                     /** 处理父actor ExecutorManager发送过来的进行请求的命令 */
                     processMainRequest();
                     break;
+                    /** 轮训请求处理 */
                 case POLL_PROGRESS:
                     pollProgress();
                     break;
@@ -541,7 +542,7 @@ public class OperationWorker extends UntypedActor {
             sentReply = true;
             //make sure not trigger timeout anymore
             cancelCancellable();
-            
+            /** 统计operationWorker及其子孙actor所花费的总时间 */
             final long operationTimeMillis = System.currentTimeMillis()
                     - startTimeMillis;
 

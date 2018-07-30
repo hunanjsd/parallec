@@ -116,7 +116,7 @@ public class ExecutionManager extends UntypedActor {
     protected ActorRef batchSenderAsstManager = null;
 
     /** The response map. */
-    protected final Map<String, ResponseOnSingleTask> responseMap = new HashMap<String, ResponseOnSingleTask>();
+    protected final Map<String, ResponseOnSingleTask> responseMap = new HashMap<>();
 
     /** The task id. */
     protected String taskId = null;
@@ -132,7 +132,7 @@ public class ExecutionManager extends UntypedActor {
     protected AsyncHttpClient asyncHttpClientGlobal = null;
 
     /** The parallel task. */
-    protected ParallelTask task = null;
+    protected ParallelTask task ;
 
     /** The command metadata. */
     protected HttpMeta httpMeta = null;
@@ -146,6 +146,7 @@ public class ExecutionManager extends UntypedActor {
      * @param task
      *            the task
      */
+    /**  */
     public ExecutionManager(ParallelTask task) {
         this.task = task;
     }
@@ -162,8 +163,11 @@ public class ExecutionManager extends UntypedActor {
     public void onReceive(Object message) {
         try {
             // Start all workers
+            /** 在parallelTaskManager的sendTaskToExecutionManager方法中发送InitialRequestToManager
+             * 才有了这里的初始化
+             * */
             if (message instanceof InitialRequestToManager) {
-                /** 该actor的上级主管*/
+                /** 该actor的上级主管,根节点actor*/
                 director = getSender();
                 logger.info("parallec task state : "
                         + ParallelTaskState.IN_PROGRESS.toString());
@@ -266,7 +270,7 @@ public class ExecutionManager extends UntypedActor {
                             .replaceStrByMap(
                                     nodeReqResponse.getRequestParameters(),
                                     requestPortStrOrig);
-                    /** http端口默认配置为80*/
+                    /** http端口默认配置为80,这里只是对端口进行了规范化,并未拼接成最终的url*/
                     int requestPort = 80;
                     try {
                         requestPort = Integer.parseInt(requestPortStr);
@@ -432,7 +436,11 @@ public class ExecutionManager extends UntypedActor {
                 logger.debug(
                         "Scheduled TIMEOUT_IN_MANAGER_SCONDS OPERATION_TIMEOUT after SEC {} ",
                         task.getConfig().getTimeoutInManagerSec());
-            } else if (message instanceof ResponseOnSingleTask) {
+            }
+            /** 处理HttpWorker等worker进行请求返回的结果,因为每个ExecutionManager创建多个actor进行请求
+             * 所以这里会有多个请求结果需要处理
+             *  */
+            else if (message instanceof ResponseOnSingleTask) {
 
                 ResponseOnSingleTask taskResponse = (ResponseOnSingleTask) message;
 
@@ -445,7 +453,7 @@ public class ExecutionManager extends UntypedActor {
                  */
                 final ResponseCountToBatchSenderAsstManager responseCountToBatchSenderAsstManager = new ResponseCountToBatchSenderAsstManager(
                         this.responseCount);
-
+                /** 统计response返回的数量 */
                 batchSenderAsstManager.tell(
                         responseCountToBatchSenderAsstManager, getSelf());
 
@@ -456,11 +464,15 @@ public class ExecutionManager extends UntypedActor {
                 if (responseMap.containsKey(hostName)) {
                     logger.error("ERROR: duplicate response received {}", hostName);
                 }
+                /** 保存返回的response */
                 responseMap.put(hostName, taskResponse);
 
                 String responseSummary = taskResponse.isError() ? "FAIL_GET_RESPONSE: "
                         + taskResponse.getErrorMessage()
                         : taskResponse.getStatusCode();
+                /** 保存返回的response结果字符串 ,可用于相同结果的合并,比如说相同的请求返回结果,
+                 * 但是不同的host,可以将这些host合并在同一个结果下。------这一切都是命运石之门的选择
+                 * */
                 Map<String, LinkedHashSet<String>> resultMap = task
                         .getAggregateResultMap();
                 if (resultMap.containsKey(responseSummary)) {
@@ -472,6 +484,7 @@ public class ExecutionManager extends UntypedActor {
                 }
 
                 // save response to result map
+                /** 将结果进一步保存到parallelTask中 */
                 NodeReqResponse nrr = task.getParallelTaskResult()
                         .get(hostName);
                 nrr.setSingleTaskResponse(taskResponse);
@@ -488,14 +501,18 @@ public class ExecutionManager extends UntypedActor {
 
                 long responseReceiveTime = System.currentTimeMillis();
                 // %.5g%n
+                /** 整个ExecutionManager任务的完成度 */
                 double progressPercent = (double) (responseCount)
                         / (double) (requestCount) * 100.0;
+                /** response返回接收的时间 */
                 String responseReceiveTimeStr = PcDateUtils
                         .getDateTimeStrStandard(new Date(responseReceiveTime));
+                /** 从ExecutionManager创建到现在过去的时间(以秒为单位) */
                 String secondElapsedStr = Double
                         .toString((responseReceiveTime - startTime) / 1000.0);
 
                 // log the first/ last 5 percent; then sample the middle
+                /** 日志记录开始和结束时候的百分之五,中间的结果进行采样记录  */
                 if (requestCount < ParallecGlobalConfig.logAllResponseIfTotalLessThan
                         || responseCount <= ParallecGlobalConfig.logAllResponseBeforeInitCount
                         || progressPercent < ParallecGlobalConfig.logAllResponseBeforePercent
@@ -522,15 +539,17 @@ public class ExecutionManager extends UntypedActor {
                                                     + taskResponse
                                                             .getErrorMessage()));
                 }
-
+                /** 设置请求的返回结果状态为完成 */
                 nrr.getRequestParameters().put(PcConstants.NODE_REQUEST_STATUS,
                         SingleTargetTaskStatus.COMPLETED.toString());
 
+                /**  */
                 if (task.getConfig().getHandlerExecutionLocation() == HandlerExecutionLocation.MANAGER
                         && task != null && task.getHandler() != null) {
                     try {
                         // logger.debug("HANDLE In manager: " +
                         // taskResponse.getHost());
+                        /** 一般response的handler都是自己定义的,将请求得到的response返回给自定义handler */
                         task.getHandler().onCompleted(taskResponse,
                                 task.getResponseContext());
                     } catch (Exception t) {
@@ -540,13 +559,14 @@ public class ExecutionManager extends UntypedActor {
                                 t.getLocalizedMessage());
                     }
                 }
-
+                /** 数据已经保存到ParallelTask中并且数据也传递到自定义handler中,所以对taskResponse中的消息进行手动清理  */
                 if (!task.getConfig().isSaveResponseToTask()) {
                     taskResponse.setResponseContent(PcConstants.NOT_SAVED);
                     taskResponse.setResponseHeaders(null);
                     logger.debug("Erased single task response content and response headers to save space.");
                 }
 
+                /** 分发请求数量等于返回数量 */
                 if (this.responseCount == this.requestCount) {
                     if (wasIssuedCancel) {
                         ExecutionManagerExecutionException exCanceled = new ExecutionManagerExecutionException(
@@ -555,6 +575,7 @@ public class ExecutionManager extends UntypedActor {
                         reply(ParallelTaskState.COMPLETED_WITH_ERROR,
                                 exCanceled);
                     } else {
+                        /**  */
                         reply(ParallelTaskState.COMPLETED_WITHOUT_ERROR, null);
                     }
 
@@ -615,6 +636,7 @@ public class ExecutionManager extends UntypedActor {
      *            the exception
      */
     @SuppressWarnings("deprecation")
+    /** 次ExecutionManager的请求任务已经全部完成,向父节点ParallelTask上报情况 */
     private void reply(ParallelTaskState state, Exception t) {
 
         task.setState(state);
@@ -635,6 +657,7 @@ public class ExecutionManager extends UntypedActor {
                     + " at time: " + curTimeStr);
 //TODO
             // #47
+            /** 对任务返回失败原因进行分析 */
             if (t instanceof ExecutionManagerExecutionException
                     && ((ExecutionManagerExecutionException) t).getType() == ManagerExceptionType.TIMEOUT) {
 
@@ -668,6 +691,9 @@ public class ExecutionManager extends UntypedActor {
                 responseMap.size());
 
         responseMap.clear();
+        /** 这个结果作用的是{@link io.parallec.core.task.ParallelTaskManager}中的sendTaskToExecutionManager方法
+         * 该方法有个异步future等待返回结果
+         * */
         director.tell(batchResponseFromManager, getSelf());
 
         // Send message to the future with the result
@@ -680,11 +706,12 @@ public class ExecutionManager extends UntypedActor {
         logger.info("\nTime taken to get all responses back : " + durationSec
                 + " secs");
         task.setExecutionEndTime(endTime);
+        /** 待所有worker都结束后才stop,其实可以修改为接受一个结束一个 */
         for (ActorRef worker : workers.values()) {
             getContext().stop(worker);
         }
         workers.clear();
-
+        /**  接着stop asst */
         if (batchSenderAsstManager != null
                 && !batchSenderAsstManager.isTerminated()) {
             getContext().stop(batchSenderAsstManager);
@@ -694,6 +721,7 @@ public class ExecutionManager extends UntypedActor {
             timeoutMessageCancellable.cancel();
         }
 
+        /** 最后关闭自己---死亡是一切的归宿,万物有开始就一定会有结果 */
         if (getSelf() != null && !getSelf().isTerminated()) {
             getContext().stop(getSelf());
         }

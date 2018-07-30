@@ -374,6 +374,7 @@ public class ParallelTaskManager {
             // set ref
             task.executionManager = executionManager;
 
+            /** 其实这里的逻辑并不明显,个人更倾向越定一个onReceive方法,不然这段代码作用容易忽视掉 */
             commandResponseFromManager = (ResponseFromManager) Await.result(
                     future, duration);
 

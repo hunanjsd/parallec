@@ -285,6 +285,7 @@ public class ParallelTaskBuilder {
                 new Thread(director).start();
             }
 
+            /** 默认都是异步的,等待返回结果 */
             if (this.getMode() == TaskRunMode.SYNC) {
                 logger.info("Executing task {} in SYNC mode...  ",
                         task.getTaskId());

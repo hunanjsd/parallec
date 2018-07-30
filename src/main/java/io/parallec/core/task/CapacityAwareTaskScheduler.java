@@ -84,6 +84,7 @@ public class CapacityAwareTaskScheduler implements Runnable {
                                     - totalUsedCapacityNew);
 
                     waitQ.poll(); // dequeue
+                    /** 调度等待队列WaitQ中的任务  */
                     Runnable taskRunnable = new Runnable() {
                         @Override
                         public void run() {

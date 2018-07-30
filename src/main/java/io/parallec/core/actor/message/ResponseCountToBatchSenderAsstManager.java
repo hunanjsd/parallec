@@ -18,6 +18,7 @@ package io.parallec.core.actor.message;
  *
  * @author Yuanteng (Jeff) Pei
  */
+/** 从ExecutionManager处接收数量,用于流量控制 */
 public class ResponseCountToBatchSenderAsstManager {
 
     /** The response count. */

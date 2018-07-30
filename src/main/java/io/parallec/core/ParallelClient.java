@@ -114,6 +114,7 @@ public class ParallelClient {
     /**
      * Initialize. create the httpClientStore, tcpClientStore
      */
+    /** ParallelClient 客户端相当于一个程序的启动器,这里进行初始化 */
     public void initialize() {
         if (isClosed.get()) {
             logger.info("Initialing Parallel Client Resources: actor system, HttpClientStore, Task Manager ....");

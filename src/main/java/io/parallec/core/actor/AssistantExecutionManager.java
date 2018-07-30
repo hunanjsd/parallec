@@ -39,7 +39,7 @@ import akka.actor.UntypedActor;
  * 
  */
 /**
- * 批量发送请求的助理类(帮助ExecutionManager发送请求)产生worker
+ * 批量发送请求的助理类(帮助ExecutionManager发送请求)产生worker,并接受worker请求返回的数据
  * */
 public class AssistantExecutionManager extends UntypedActor {
 
@@ -218,7 +218,7 @@ public class AssistantExecutionManager extends UntypedActor {
 
             }
         } else if (message instanceof ResponseCountToBatchSenderAsstManager) {
-
+            /** 用于统计response数量 */
             responseCount = ((ResponseCountToBatchSenderAsstManager) message)
                     .getResponseCount();
 
