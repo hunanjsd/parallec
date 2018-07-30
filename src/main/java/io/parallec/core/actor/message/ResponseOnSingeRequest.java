@@ -33,7 +33,7 @@ import java.util.Map;
  * @author Yuanteng (Jeff) Pei
  *
  */
-/** 最终http请求回来的数据都会保存到这里,进而汇集到中*/
+/** 最终http请求回来的数据都会保存到这里,进而逐步上传到父actor*/
 public class ResponseOnSingeRequest {
 
     /** The response body. */

@@ -152,14 +152,17 @@ public class OperationWorker extends UntypedActor {
                 switch ((OperationWorkerMsgType) message) {
 
                 case PROCESS_REQUEST:
+                    /** 处理父actor ExecutorManager发送过来的进行请求的命令 */
                     processMainRequest();
                     break;
                 case POLL_PROGRESS:
                     pollProgress();
                     break;
+                    /** 处理超时情况,超时信息由自己发送自己处理 */
                 case OPERATION_TIMEOUT:
                     operationTimeout();
                     break;
+                    /** 取消的情况由父节点ExecutorManager发出 */
                 case CANCEL:
                     // use the same function
                     cancel();
@@ -223,12 +226,13 @@ public class OperationWorker extends UntypedActor {
      * @throws Exception
      *             the exception
      */
+    /** 用于处理httpWorker,PingWorker等请求回来的结果 */
     private final void handleHttpWorkerResponse(
             ResponseOnSingeRequest respOnSingleReq) throws Exception {
         // Successful response from GenericAsyncHttpWorker
 
         // Jeff 20310411: use generic response
-
+        /** 为啥在这里总是新建一个ResponseOnSingleRequest不是已经从子actor中接收到了一个response了吗*/
         String responseContent = respOnSingleReq.getResponseBody();
         response.setResponseContent(respOnSingleReq.getResponseBody());
 
@@ -237,6 +241,9 @@ public class OperationWorker extends UntypedActor {
          * 1. init poller data and HttpPollerProcessor 2. check if task
          * complete, if not, send the request again.
          */
+        /** 检查轮训逻辑是否可用,如果需要轮训或者轮训已经往常,初始化轮训数据和HttpPollerProcessor
+         * 检查任务是否完成,若没有,继续发送请求
+         * */
         if (request.isPollable()) {
             boolean scheduleNextPoll = false;
             boolean errorFindingUuid = false;
@@ -348,6 +355,7 @@ public class OperationWorker extends UntypedActor {
 
         sender = getSender();
         startTimeMillis = System.currentTimeMillis();
+        /** 设置持续时间 */
         timeoutDuration = Duration.create(
                 request.getActorMaxOperationTimeoutSec(), TimeUnit.SECONDS);
 
@@ -355,6 +363,9 @@ public class OperationWorker extends UntypedActor {
 
         if (request.getProtocol() == RequestProtocol.HTTP 
                 || request.getProtocol() == RequestProtocol.HTTPS) {
+            /** 这里会根据request Protocol,target url, request port,request source path组装请求的最终url
+             * 因为数据采集中的url都是已经定义好了的,所以这一步跳过
+             * */
 //            String urlComplete = String.format("%s://%s:%d%s", request
 //                    .getProtocol().toString(), trueTargetNode, request
 //                    .getPort(), request.getResourcePath());
@@ -406,6 +417,7 @@ public class OperationWorker extends UntypedActor {
      * 201412: now consider the poller. With poller, will cancel this future
      * task and reschedule
      */
+    /** 定时调度,如果了timeout时间则触发该方法 */
     private void cancelExistingIfAnyAndScheduleTimeoutCall() {
         // To handle cases where this operation takes extremely long, schedule a
         // 'timeout' message to be sent to us
@@ -417,6 +429,7 @@ public class OperationWorker extends UntypedActor {
         }
 
         // now reschedule
+        /** 发送消息给自己 */
         timeoutMessageCancellable = getContext()
                 .system()
                 .scheduler()

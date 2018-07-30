@@ -234,7 +234,7 @@ public class HttpWorker extends UntypedActor {
                                 "duplicated PROCESS_REQUEST msg. ignore...");
                     }
                     break;
-
+                /** 取消的情况由父节点OperationWorker发出 */
                 case CANCEL:
                     getLogger().info(
                             "Request was CANCELLED.................{}",
@@ -258,7 +258,7 @@ public class HttpWorker extends UntypedActor {
                             PcConstants.NA_INT, null);
 
                     break;
-
+                /** 超时消息由父节点OperationWorker发出 */
                 case PROCESS_ON_TIMEOUT:
 
                     getLogger().error("PROCESS_ON_TIMEOUT.................{}",
