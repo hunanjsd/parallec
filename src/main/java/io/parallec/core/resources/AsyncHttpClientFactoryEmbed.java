@@ -76,11 +76,11 @@ public final class AsyncHttpClientFactoryEmbed {
                     .setRequestTimeout(ParallecGlobalConfig.ningSlowClientRequestTimeoutMillis);
 
             logger.info(
-                    "FastClient: ningFastClientConnectionTimeoutMillis: {}",
+                    "FastClient: async-http-client FastClientConnectionTimeoutMillis: {}",
                     ParallecGlobalConfig.ningFastClientConnectionTimeoutMillis);
             /** 设置http客户端连接的超时时间*/
 
-            logger.info("FastClient: ningFastClientRequestTimeoutMillis: {}",
+            logger.info("FastClient: async-http-client FastClientRequestTimeoutMillis: {}",
                     ParallecGlobalConfig.ningFastClientRequestTimeoutMillis);
             /** 设置http客户端请求超时时间 */
 
