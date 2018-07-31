@@ -24,10 +24,10 @@ import io.parallec.core.bean.ping.PingMode;
 public class ParallecGlobalConfig {
 
     /** The max capacity for the job scheduler. default 2500 */
-    public static int maxCapacity = 2500;
+    public static int maxCapacity = 20000;
 
     /** The concurrency for each task. default 1000 */
-    public static int concurrencyDefault = 1000;
+    public static int concurrencyDefault = 20000;
     
     /** The max concurrency for SSH task. default 400. */
     public static int concurrencySshLimit= 400;
